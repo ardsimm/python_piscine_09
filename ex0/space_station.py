@@ -15,18 +15,18 @@ class SpaceStationModel(BaseModel):
     )
 
     crew_size: int = Field(
+        ge=1,
         le=20,
-        ge=1
     )
 
     power_level: float = Field(
+        ge=0.0,
         le=100.0,
-        ge=0.0
     )
 
     oxygen_level: float = Field(
+        ge=0.0,
         le=100.0,
-        ge=0.0
     )
 
     last_maintenance: date = Field()
@@ -36,7 +36,8 @@ class SpaceStationModel(BaseModel):
     )
 
     notes: Optional[str] = Field(
-        default=None
+        default=None,
+        max_length=200
     )
 
     def __str__(self) -> str:
