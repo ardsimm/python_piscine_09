@@ -55,13 +55,13 @@ class AlienContactModel(BaseModel):
             f"Type: {self.contact_type.value}",
             f"Location: {self.location}",
             f"Signal: {self.signal_strength}/10",
-            f"Duration: {self.duration_minutes}) minutes",
+            f"Duration: {self.duration_minutes} minutes",
             f"Witnesses: {self.witness_count}",
             f"Message: '{self.message_received}'"
         ])
 
     @model_validator(mode="after")
-    def validate(self) -> BaseModel:
+    def validate_model(self) -> "AlienContactModel":
         if not self.contact_id.startswith("AC"):
             raise ValueError("Contact id must start with \"AC\"")
         if (
@@ -74,14 +74,14 @@ class AlienContactModel(BaseModel):
             and self.witness_count < 3
         ):
             raise ValueError(
-                "TELELPATHIC contacts must have at least 3 witnesses"
+                "TELEPATHIC contacts must have at least 3 witnesses"
             )
         if (
             self.signal_strength > 7.0
             and self.message_received is None
         ):
             raise ValueError(
-                "Strong messages (>7.0) must have a recieved message"
+                "Strong messages (>7.0) must have a received message"
             )
         return self
 
@@ -95,7 +95,7 @@ def main() -> None:
         signal_strength=8.5,
         duration_minutes=45,
         witness_count=5,
-        message_received="Greetings from Zeta Reticuli'"
+        message_received="'Greetings from Zeta Reticuli'"
     )
 
     print("Alien Contact Log Validation")
