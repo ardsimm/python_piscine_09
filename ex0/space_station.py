@@ -3,7 +3,7 @@ from xmlrpc.client import DateTime
 from pydantic import BaseModel, Field, ValidationError
 
 
-class SpaceStation(BaseModel):
+class SpaceStationModel(BaseModel):
 
     station_id: str = Field(
         min_length=3,
@@ -57,7 +57,7 @@ def main() -> None:
         sep="\n"
     )
 
-    valid_space_station = SpaceStation(
+    valid_space_station = SpaceStationModel(
         station_id="ISS0042",
         name="International Space Station",
         crew_size=8,
@@ -71,7 +71,7 @@ def main() -> None:
     print("\n========================================")
     print("Expected validation error:")
     try:
-        invalid_space_station = SpaceStation(
+        invalid_space_station = SpaceStationModel(
             station_id="ISS0042",
             name="International Space Station",
             crew_size=42,
