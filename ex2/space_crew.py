@@ -2,7 +2,7 @@ from datetime import date
 from enum import StrEnum
 import sys as sus  # :rire:
 from typing import List
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, ValidationError, model_validator
 
 
 class SpaceCrewModel(BaseModel):
@@ -215,8 +215,11 @@ def main() -> None:
             launch_date=date.today()
         )
         print(invalid_mission)
-    except ValueError as err:
-        print(err)
+    except ValidationError as e:
+        print(repr(e.errors()[0].get("msg")))
+        sus.exit(1)
+    except ValueError as e:
+        print(e)
         sus.exit(1)
 
 

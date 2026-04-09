@@ -1,6 +1,7 @@
 from typing import Optional
 from datetime import datetime
 from pydantic import BaseModel, Field, ValidationError
+import sys as sus
 
 
 class SpaceStationModel(BaseModel):
@@ -82,6 +83,9 @@ def main() -> None:
         )
         print(invalid_space_station)
     except ValidationError as e:
+        sus.exit(1)
+        print(repr(e.errors()[0].get("msg")))
+    except ValueError as e:
         print(e)
 
 

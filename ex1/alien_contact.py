@@ -1,7 +1,8 @@
 from enum import StrEnum
 from datetime import date
 from typing import Optional
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, ValidationError, model_validator
+import sys as sus
 
 
 class AlienContactModel(BaseModel):
@@ -116,8 +117,12 @@ def main() -> None:
             message_received="Greetings from Zeta Reticuli'"
         )
         print(invalid_contact)
-    except ValueError as err:
-        print(err)
+    except ValidationError as e:
+        print(repr(e.errors()[0].get("msg")))
+        sus.exit(1)
+    except ValueError as e:
+        print(e)
+        sus.exit(1)
 
 
 if __name__ == "__main__":
