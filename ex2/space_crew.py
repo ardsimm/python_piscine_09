@@ -1,5 +1,6 @@
 from datetime import date
 from enum import StrEnum
+import sys as sus  # :rire:
 from typing import List
 from pydantic import BaseModel, Field, model_validator
 
@@ -43,6 +44,9 @@ class SpaceCrewModel(BaseModel):
     is_active: bool = Field(
         default=True
     )
+
+    def __str__(self) -> str:
+        return f"{self.name} ({self.rank.value}) - {self.specialization}"
 
 
 class SpaceMissionModel(BaseModel):
@@ -122,3 +126,99 @@ class SpaceMissionModel(BaseModel):
         ):
             raise ValueError("All crew members must ne active")
         return self
+
+    def __str__(self) -> str:
+        ret_str = "\n".join([
+            f"Mission: {self.mission_name}",
+            f"ID: {self.mission_id}",
+            f"Destination: {self.destination}",
+            f"Duration: {self.duration_days} days",
+            f"Budget: ${self.budget_millions}M",
+            f"Crew size: {len(self.crew)}",
+            "Crew members:\n",
+        ])
+        return ret_str + "\n".join([
+            f"- {crewmate.__str__()}"
+            for crewmate in self.crew
+        ])
+
+
+def main() -> None:
+    valid_space_crew = [
+        SpaceCrewModel(
+            member_id="COM_01",
+            name="Sarah Connor",
+            rank=SpaceCrewModel.ERank.COMMANDER,
+            age=42,
+            specialization="Mission Command",
+            years_experience=21
+        ),
+        SpaceCrewModel(
+            member_id="LIE_01",
+            name="Jean-Phil Monslip",
+            rank=SpaceCrewModel.ERank.LIEUTENANT,
+            age=18,
+            specialization="Navigation",
+            years_experience=12
+        ),
+        SpaceCrewModel(
+            member_id="COM_01",
+            name="Kapinarc",
+            rank=SpaceCrewModel.ERank.OFFICER,
+            age=69,
+            specialization="Engineering",
+            years_experience=34,
+        )
+    ]
+
+    valid_mission = SpaceMissionModel(
+        mission_id="M2024_MARS",
+        mission_name="Mars Colony Establishment",
+        destination="Mars",
+        duration_days=900,
+        crew=valid_space_crew,
+        budget_millions=2500.0,
+        launch_date=date.today()
+    )
+    print("Space Mission Crew Validation")
+    print("=========================================")
+    print(valid_mission)
+
+    print("\n=========================================")
+    print("Expected validation error:")
+    try:
+
+        invalid_mission = SpaceMissionModel(
+            mission_id="M2024_MARS",
+            mission_name="Mars Colony Establishment",
+            destination="Mars",
+            duration_days=900,
+            crew=[
+                SpaceCrewModel(
+                    member_id="LIE_01",
+                    name="Jean-Phil Monslip",
+                    rank=SpaceCrewModel.ERank.LIEUTENANT,
+                    age=18,
+                    specialization="Navigation",
+                    years_experience=12
+                ),
+                SpaceCrewModel(
+                    member_id="COM_01",
+                    name="Kapinarc",
+                    rank=SpaceCrewModel.ERank.OFFICER,
+                    age=69,
+                    specialization="Engineering",
+                    years_experience=34,
+                )
+            ],
+            budget_millions=2500.0,
+            launch_date=date.today()
+        )
+        print(invalid_mission)
+    except ValueError as err:
+        print(err)
+        sus.exit(1)
+
+
+if __name__ == "__main__":
+    main()
