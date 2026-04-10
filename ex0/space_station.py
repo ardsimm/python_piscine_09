@@ -43,7 +43,7 @@ class SpaceStationModel(BaseModel):
 
     def __str__(self) -> str:
         return "\n".join([
-            f"ID: {self.is_operational})",
+            f"ID: {self.station_id})",
             f"Name: {self.name}",
             f"Crew: {self.crew_size} people",
             f"Power: {self.power_level}%",
@@ -83,10 +83,11 @@ def main() -> None:
         )
         print(invalid_space_station)
     except ValidationError as e:
-        sus.exit(1)
         print(repr(e.errors()[0].get("msg")))
+        sus.exit(1)
     except ValueError as e:
         print(e)
+        sus.exit(1)
 
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 from enum import StrEnum
-from datetime import date
+from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel, Field, ValidationError, model_validator
 import sys as sus
@@ -18,7 +18,7 @@ class AlienContactModel(BaseModel):
         max_length=15
     )
 
-    timestamp: date = Field()
+    timestamp: datetime = Field()
 
     location: str = Field(
         min_length=3,
@@ -90,13 +90,13 @@ class AlienContactModel(BaseModel):
 def main() -> None:
     valid_contact = AlienContactModel(
         contact_id="AC_2024_001",
-        timestamp=date.today(),
+        timestamp=datetime.today(),
         contact_type=AlienContactModel.EContactType.RADIO,
         location="Area 51, Nevada",
         signal_strength=8.5,
         duration_minutes=45,
         witness_count=5,
-        message_received="'Greetings from Zeta Reticuli'"
+        message_received="Greetings from Zeta Reticuli"
     )
 
     print("Alien Contact Log Validation")
@@ -108,7 +108,7 @@ def main() -> None:
     try:
         invalid_contact = AlienContactModel(
             contact_id="AC_2024_002",
-            timestamp=date.today(),
+            timestamp=datetime.today(),
             contact_type=AlienContactModel.EContactType.TELEPATHIC,
             location="Area 51, Nevada",
             signal_strength=8.5,

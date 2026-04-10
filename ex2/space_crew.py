@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import datetime
 from enum import StrEnum
 import sys as sus  # :rire:
 from typing import List
@@ -66,7 +66,7 @@ class SpaceMissionModel(BaseModel):
         max_length=50
     )
 
-    launch_date: date = Field()
+    launch_date: datetime = Field()
 
     duration_days: int = Field(
         le=3650,  # 10 years
@@ -112,7 +112,7 @@ class SpaceMissionModel(BaseModel):
                 for member
                 in self.crew
                 if member.years_experience >= 5
-            ]) < len(self.crew) // 2
+            ]) < len(self.crew) / 2
         ):
             raise ValueError(
                 "Long missions (>= 365) must have at least 50%" +
@@ -124,7 +124,7 @@ class SpaceMissionModel(BaseModel):
             not member.is_active
             for member in self.crew
         ):
-            raise ValueError("All crew members must ne active")
+            raise ValueError("All crew members must be active")
         return self
 
     def __str__(self) -> str:
@@ -178,7 +178,7 @@ def main() -> None:
         duration_days=900,
         crew=valid_space_crew,
         budget_millions=2500.0,
-        launch_date=date.today()
+        launch_date=datetime.today()
     )
     print("Space Mission Crew Validation")
     print("=========================================")
@@ -212,7 +212,7 @@ def main() -> None:
                 )
             ],
             budget_millions=2500.0,
-            launch_date=date.today()
+            launch_date=datetime.today()
         )
         print(invalid_mission)
     except ValidationError as e:
